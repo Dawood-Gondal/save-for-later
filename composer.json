@@ -1,0 +1,27 @@
+{
+    "name": "m2commerce/save-for-later",
+    "description": "This extension allows your registered users to save the products they are interested in for future from cart.",
+    "require": {
+        "php": "~7.3.0|~7.4.0|~8.1.0"
+    },
+    "type": "magento2-module",
+    "keywords": ["magento2"],
+    "version": "1.0.0",
+    "license":[
+        "proprietary"
+    ],
+    "authors":[
+        {
+            "name" : "Dawood Gondal",
+            "email" : "dawoodgondaldev@gmail.com"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "M2Commerce\\ProductAttachments\\": ""
+        }
+    }
+}

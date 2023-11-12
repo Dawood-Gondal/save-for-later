@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * @category    M2Commerce Enterprise
+ * @package     M2Commerce_SaveForLater
+ * @copyright   Copyright (c) 2023 M2Commerce Enterprise
+ * @author      dawoodgondaldev@gmail.com
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Saved For Later Products</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="M2Commerce\SaveForLater\Block\SavedItems\Grid" ifconfig="saveForLater/general/isEnable" name="save.for.later.grid" template="M2Commerce_SaveForLater::grid.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

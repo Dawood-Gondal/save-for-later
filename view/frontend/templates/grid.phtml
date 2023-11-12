@@ -1,0 +1,197 @@
+<?php
+/**
+ * @category    M2Commerce Enterprise
+ * @package     M2Commerce_SaveForLater
+ * @copyright   Copyright (c) 2023 M2Commerce Enterprise
+ * @author      dawoodgondaldev@gmail.com
+ */
+
+/**
+ * @var \M2Commerce\SaveForLater\Block\SavedItems\Grid $block
+ * @var \M2Commerce\SaveForLater\Model\ResourceModel\SavedItem\Collection $saveForLaterCollection
+ * @var \M2Commerce\SaveForLater\Model\SavedItem $saveForLaterItem
+ */
+$saveForLaterCollection = $block->getSaveForLaterItems();
+?>
+
+<?php if ($block->getCustomerSession()): ?>
+    <?php if (!str_contains($this->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]), 'saveForLater/index/grid')): ?>
+        <h1 class="page-title"><span class="base" data-ui-id="page-title-wrapper">Saved For Later</span></h1>
+    <?php endif; ?>
+
+    <?php if ($saveForLaterCollection->getSize()): ?>
+        <?php $mergedCells = ($this->helper('Magento\Tax\Helper\Data')->displayCartBothPrices() ? 2 : 1); ?>
+        <div class="cart table-wrapper<?= $mergedCells == 2 ? ' detailed' : '' ?>">
+            <table id="shopping-cart-table" class="cart items data table">
+                <caption role="heading" aria-level="2" class="table-caption"><?= __('Save For Later Items') ?></caption>
+                <thead>
+                    <tr>
+                        <th class="col item" scope="col"><span><?= __('Item') ?></span></th>
+                        <th class="col price" scope="col"><span><?= __('Price') ?></span></th>
+                        <th class="col qty" scope="col"><span><?= __('Qty') ?></span></th>
+                        <th class="col qty" scope="col"><span><?= __('Sub Total') ?></span></th>
+                    </tr>
+                </thead>
+                <?php foreach ($saveForLaterCollection as $saveForLaterItem): ?>
+                    <?php $productRequestInfo = json_decode($saveForLaterItem->getQouteItemRequestInfo(), true); ?>
+                    <?php if ($saveForLaterItem->getGroupProductId()): ?>
+                        <?php $product = $block->getProduct($saveForLaterItem->getGroupProductId()) ?>
+                    <?php else: ?>
+                        <?php $product = $block->getProduct($productRequestInfo['product']) ?>
+                    <?php endif ?>
+                    <?php if (isset($productRequestInfo['super_attribute'])) {
+                        $superAttr = $productRequestInfo['super_attribute'];
+                        $sku = $product->getSku();
+                        $productChild = $block->getProductBySku($sku, $superAttr);
+                    } else {
+                        $productChild = $product;
+                    } ?>
+                    <tbody class="cart item">
+                        <tr class="item-info">
+                            <td data-th="<?= $block->escapeHtml(__('Item')) ?>" class="col item">
+                                <a href="<?= $product->getProductUrl() ?>"
+                                   title="<?= $block->escapeHtml($product->getName()) ?>"
+                                   tabindex="-1"
+                                   class="product-item-photo"><?= $block->getImage($productChild, 'cart_page_product_thumbnail')->toHtml() ?>
+                                </a>
+                                <div class="product-item-details">
+                                    <strong class="product-item-name">
+                                        <a href="<?= $product->getProductUrl() ?>"><?= $block->escapeHtml($product->getName()) ?></a>
+                                    </strong>
+
+                                    <?php if (isset($productRequestInfo['super_attribute'])): ?>
+                                        <?php $supperAttributeSet = $productRequestInfo['super_attribute'] ?>
+                                        <?php foreach ($supperAttributeSet as $key => $value): ?>
+                                            <dl class="item-options">
+                                                <dd>
+                                                    <?= $block->getConfiguration($product, $key, $value) ?>
+                                                </dd>
+                                            </dl>
+                                        <?php endforeach; ?>
+                                    <?php elseif (isset($productRequestInfo['bundle_option'])): ?>
+                                        <?php $supperAttributeSet = $productRequestInfo['bundle_option'] ?>
+                                        <?php $totalPrice = 0 ?>
+                                        <?php foreach ($supperAttributeSet as $key => $value): ?>
+                                            <?php $bundleOption = $block->getBundleProductOption($product, $key, $value) ?>
+                                            <dl class="item-options">
+                                                <dd>
+                                                    <?php if (isset($productRequestInfo['bundle_option_qty'])): ?>
+                                                        <strong><?= $bundleOption['option_title'] ?></strong>: <?= $productRequestInfo['bundle_option_qty'][$key] ?> x <?= $bundleOption['value'] ?> $<?= $bundleOption['price'] ?>
+                                                        <?php $totalPrice += (intval($bundleOption['price']) * intval($productRequestInfo['bundle_option_qty'][$key])) ?>
+                                                    <?php else: ?>
+                                                        <strong><?= $bundleOption['option_title'] ?></strong>: <?= $bundleOption['selection_qty'] ?> x <?= $bundleOption['value'] ?> $<?= $bundleOption['price'] ?>
+                                                        <?php $totalPrice += (intval($bundleOption['price']) * intval($bundleOption['selection_qty'])) ?>
+                                                    <?php endif ?>
+                                                </dd>
+                                            </dl>
+                                        <?php endforeach; ?>
+                                    <?php elseif ($product->getTypeId() == "downloadable"): ?>
+                                        <dl class="item-options">
+                                            <dd>
+                                                <strong><?= __('Downloads:  ') ?></strong><span><?= $product->getName(); ?></span>
+                                            </dd>
+                                        </dl>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
+                            <?php if (!isset($productRequestInfo['bundle_option'])): ?>
+                                <td class="col price" data-th="<?= $block->escapeHtml(__('Price')) ?>">
+                                    <span class="price-excluding-tax" data-label="Excl. Tax">
+                                        <span class="cart-price">
+                                            <span class="price"> <?= $block->getPrice($productChild->getPrice()) ?></span>
+                                        </span>
+                                    </span>
+                                </td>
+                            <?php else: ?>
+                                <td class="col price" data-th="<?= $block->escapeHtml(__('Price')) ?>">
+                                    <span class="price-excluding-tax" data-label="Excl. Tax">
+                                        <span class="cart-price">
+                                            <span class="price"> <?= $block->getPrice($totalPrice) ?></span>
+                                        </span>
+                                    </span>
+                                </td>
+                            <?php endif ?>
+                            <td class="col qty" data-th="<?= $block->escapeHtml(__('Qty')) ?>">
+                                <?= $productRequestInfo['qty'] ?>
+                            </td>
+                            <?php if (!isset($productRequestInfo['bundle_option'])): ?>
+                                <td class="col price" data-th="<?= $block->escapeHtml(__('Sub Total')) ?>">
+                                    <span class="price-excluding-tax" data-label="Excl. Tax">
+                                        <span class="cart-price">
+                                            <span class="price"> <?= $block->getPrice($productChild->getPrice() * intval($productRequestInfo['qty'])) ?></span>
+                                        </span>
+                                    </span>
+                                </td>
+                            <?php else: ?>
+                                <td class="col price" data-th="<?= $block->escapeHtml(__('Price')) ?>">
+                                <span class="price-excluding-tax" data-label="Excl. Tax"><span class="cart-price"><span
+                                            class="price"><?= $block->getPrice($totalPrice) ?></span></span></span>
+                                </td>
+                            <?php endif ?>
+                        </tr>
+                    <tr class="item-actions">
+                        <td colspan="100">
+                            <div class="actions-toolbar">
+                                <a href="javascript:void(0);" title="Retrieve to Cart" onclick=retrieveToCard('<?= $saveForLaterItem->getId() ?>')>
+                                    <?= __('Retrieve to Cart') ?>
+                                </a>
+                                <a href="javascript:void(0)" title="Remove item" class="action action-delete" onclick="deleteSaveForLater('<?= $saveForLaterItem->getId() ?>')">
+                                    <span><?= __('Remove item') ?></span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                <?php endforeach ?>
+            </table>
+        </div>
+    <?php else: ?>
+        <div  class="message-warning warning message">
+            <div >You do not have any saved to later products</div>
+        </div>
+    <?php endif; ?>
+
+    <script type="text/javascript">
+        function retrieveToCard(saveForLaterId) {
+            require(['jquery'], function ($) {
+                $.ajax({
+                    url: "<?=$block->getUrl('saveForLater/index/retrieveToCart')?>",
+                    data: {
+                        saveForLaterId: saveForLaterId
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    showLoader: true,
+                    success: function (data, status, xhr) {
+                        location.reload();
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        console.log('Error happens. Try again.');
+                        console.log(errorThrown);
+                    }
+                });
+            });
+        }
+
+        function deleteSaveForLater(saveForLaterId) {
+            require(['jquery'], function ($) {
+                $.ajax({
+                    url: "<?=$block->getUrl('saveForLater/index/deleteFromSaveForLater')?>",
+                    data: {
+                        saveForLaterId: saveForLaterId
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    showLoader: true,
+                    success: function (response) {
+                        location.reload();
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        console.log('Error happens. Try again.');
+                        console.log(errorThrown);
+                    }
+                });
+            });
+        }
+    </script>
+<?php endif; ?>

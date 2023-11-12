@@ -1,0 +1,40 @@
+<?php
+/**
+ * @category    M2Commerce Enterprise
+ * @package     M2Commerce_SaveForLater
+ * @copyright   Copyright (c) 2023 M2Commerce Enterprise
+ * @author      dawoodgondaldev@gmail.com
+ */
+
+/**
+ * @var $block \M2Commerce\SaveForLater\Block\Cart\Item\Renderer\Actions\SaveForLater
+ */
+?>
+
+<?php if ($block->getLoggedIn() && $block->getSaveForLaterEnable()): ?>
+    <a href="javascript:void(0);" onclick="saveForLater('<?= $block->getQouteItemId() ?>')">
+        <?= __('Save For Later') ?>
+    </a>
+
+    <script type="text/javascript">
+        function saveForLater(qouteItemId) {
+            require([
+                'jquery'], function ($) {
+                $.ajax({
+                    url: "<?=$block->getUrl('saveForLater/index/saveForLater')?>",
+                    data: {qouteItemId: qouteItemId},
+                    type: 'POST',
+                    dataType: 'json',
+                    showLoader: true,
+                    success: function (data, status, xhr) {
+                        location.reload();
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        console.log('Error happens. Try again.');
+                        console.log(errorThrown);
+                    }
+                });
+            });
+        }
+    </script>
+<?php endif; ?>

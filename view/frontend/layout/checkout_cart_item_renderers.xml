@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category    M2Commerce Enterprise
+ * @package     M2Commerce_SaveForLater
+ * @copyright   Copyright (c) 2023 M2Commerce Enterprise
+ * @author      dawoodgondaldev@gmail.com
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.cart.item.renderers.bundle.actions">
+            <block class="M2Commerce\SaveForLater\Block\Cart\Item\Renderer\Actions\SaveForLater" name="link.bundle.save.for.later" template="M2Commerce_SaveForLater::link.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.virtual.actions">
+            <block class="M2Commerce\SaveForLater\Block\Cart\Item\Renderer\Actions\SaveForLater" name="link.virtual.save.for.later" template="M2Commerce_SaveForLater::link.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.simple.actions">
+            <block class="M2Commerce\SaveForLater\Block\Cart\Item\Renderer\Actions\SaveForLater" name="link.simple.save.for.later" template="M2Commerce_SaveForLater::link.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.default.actions">
+            <block class="M2Commerce\SaveForLater\Block\Cart\Item\Renderer\Actions\SaveForLater" name="link.default.save.for.later" template="M2Commerce_SaveForLater::link.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.configurable.actions">
+            <block class="M2Commerce\SaveForLater\Block\Cart\Item\Renderer\Actions\SaveForLater" name="link.configurable.save.for.later" template="M2Commerce_SaveForLater::link.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.downloadable.actions">
+            <block class="M2Commerce\SaveForLater\Block\Cart\Item\Renderer\Actions\SaveForLater" name="link.downloadable.save.for.later" template="M2Commerce_SaveForLater::link.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.item.renderers.grouped.actions">
+            <block class="M2Commerce\SaveForLater\Block\Cart\Item\Renderer\Actions\SaveForLater" name="link.grouped.save.for.later" template="M2Commerce_SaveForLater::link.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

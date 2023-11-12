@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * @category    M2Commerce Enterprise
+ * @package     M2Commerce_SaveForLater
+ * @copyright   Copyright (c) 2023 M2Commerce Enterprise
+ * @author      dawoodgondaldev@gmail.com
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="customer_account_navigation">
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-save-for-later" ifconfig="saveForLater/general/isEnable">
+                <arguments>
+                    <argument name="path" xsi:type="string">saveForLater/index/grid</argument>
+                    <argument name="label" xsi:type="string">Saved For Later Products</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

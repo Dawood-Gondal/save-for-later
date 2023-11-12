@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category    M2Commerce Enterprise
+ * @package     M2Commerce_SaveForLater
+ * @copyright   Copyright (c) 2023 M2Commerce Enterprise
+ * @author      dawoodgondaldev@gmail.com
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="M2Commerce\SaveForLater\Block\SavedItems\Grid" after="-" ifconfig="saveForLater/general/isEnable"
+                   name="checkout.cart.save.for.later" template="M2Commerce_SaveForLater::grid.phtml" >
+                <block class="Magento\Framework\View\Element\RendererList" name="checkout.cart.save.for.later.item.renderers"  as="save.for.later.renderer.list" />
+                <block class="Magento\Framework\View\Element\Text\ListText" name="checkout.cart.save.for.later.order.actions"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>
